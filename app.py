@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 from flask import Flask
 import report_generator_service
@@ -7,7 +8,8 @@ from tachometer_controller import tachometer_api
 app = Flask(__name__)
 
 
-@app.route('/')
+# Endpointot úgy lehet hozzáadni, ha kidekorálunk függvényeket pl itt a hello_world()
+@app.route('/')  # meghivjuk a /pass -ra akkor ez a függvény hivódik meg
 def hello_world():  # put application's code here
     return 'Hello World!'
 
@@ -15,12 +17,12 @@ def hello_world():  # put application's code here
 if __name__ == '__main__':
     print('Hello')
 
-    REPORT_GENERATOR_PID = os.fork()
+    REPORT_GENERATOR_PID = multiprocessing.Queue
     if REPORT_GENERATOR_PID == 0:
         report_generator_service.shcedule_report_generation()
         exit(0)
 
     print(tachometer_api)
-    app.register_blueprint(tachometer_api)
+    app.register_blueprint(tachometer_api) # blueprinteket tudunk regisztrálni
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)  # milyen hoston, porton figyeljen
